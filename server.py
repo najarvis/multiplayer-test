@@ -14,7 +14,7 @@ class Server(object):
         self.serversocket.bind((HOST, PORT))
 
         # Listen to up to 5 requests at a time.
-        self.serversocket.listen(5)
+        #self.serversocket.listen(5)
 
         self.clients = {}
 
