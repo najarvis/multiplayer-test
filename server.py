@@ -40,9 +40,9 @@ class Server(object):
             if formatted[3]: self.clients[addr][0] += 5 # d
 
             reply = [self.clients[addr], [pos for pos in self.clients.values() if pos != self.clients[addr]]]
-            enc_reply = base64.b64encode(pickle.dumps(self.clients[addr]))
+            enc_reply = base64.b64encode(pickle.dumps(reply))
 
-            self.serversocket.sendto(reply, addr)
+            self.serversocket.sendto(enc_reply, addr)
 
         except IndexError:
             print("Bad data format!")
