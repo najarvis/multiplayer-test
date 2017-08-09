@@ -61,7 +61,7 @@ def run(host=None):
 
         # Create a player instance and draw it for all other players
         for other_player in players[1]:
-            player.Player(other_player).render(screen)
+            player.Player.create_other(other_player).render(screen)
 
         # Draw the main player
         main_player.render(screen)

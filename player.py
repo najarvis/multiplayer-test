@@ -13,18 +13,25 @@ class Player(object):
         self.base_img = pygame.image.load("res/player_ships/PlayerShip1.png").convert_alpha()
         # self.img.fill(self.color)
 
+    @classmethod
+    def create_other(cls, data):
+        to_return = cls()
+        to_return.pos = vec2(data[0], data[1])
+        to_return.orientation = data[2]
+        to_return.health = data[3]
+        return to_return
+
     def update(self, data):
         self.pos.x = data[0]
         self.pos.y = data[1]
         self.orientation = data[2]
         self.health = max(0, data[3])
 
+    def render(self, surface):
         self.img = pygame.transform.rotate(self.base_img, math.degrees(self.orientation))
         self.rect = self.img.get_rect()
         self.rect.center = self.pos
 
-    def render(self, surface):
-        # pygame.draw.circle(surface, self.color, vec_to_int(self.pos), self.size // 2)
         surface.blit(self.img, self.rect)
 
 def vec_to_int(vec):
