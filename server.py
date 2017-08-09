@@ -1,6 +1,7 @@
 import socket
 import os
 import pickle
+import base64
 
 HOST = ''
 PORT = 3333
@@ -22,7 +23,7 @@ class Server(object):
     def update(self):
 
         data, addr = self.serversocket.recvfrom(1024)
-        formatted = pickle.loads(data.strip().decode('base64', 'strict'))
+        formatted = pickle.loads(base64.base64decode(data.strip()))
 
         reply = "We hear you loud and clear, alpha".encode()
 
