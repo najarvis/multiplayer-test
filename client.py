@@ -4,7 +4,7 @@ import sys
 HOST = '104.236.8.97'
 PORT = 3333
 
-class Client(obect):
+class Client(object):
 
     def __init__(self):
         self.clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -21,7 +21,7 @@ class Client(obect):
 def run():
     client = Client()
     for i in range(10):
-        client.send_message(str(i))
+        client.send_message(str(i).encode())
 
 if __name__ == "__main__":
     run()

@@ -24,7 +24,7 @@ class Server(object):
 
         reply = "We hear you loud and clear, alpha"
 
-        s.sendto(reply, addr)
+        self.serversocket.sendto(reply, addr)
         print('Message from {}:{} - {}'.format(addr[0], addr[1], data.strip()))
 
 def start():
