@@ -29,7 +29,7 @@ class Server(object):
         self.curr_time = time.time()
         delta = self.curr_time - old_time
 
-        for client in self.clients.keys():
+        for client in self.clients.keys()[:]:
             # increase how long it has been since we've seen each client
             self.clients[client][2] += delta;
 
@@ -42,7 +42,7 @@ class Server(object):
 
         if not data:
             return
-            
+
         formatted = pickle.loads(base64.b64decode(data.strip()))
 
         # print('Message from {}:{} - {}'.format(addr[0], addr[1], formatted))
