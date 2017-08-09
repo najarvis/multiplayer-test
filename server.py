@@ -1,23 +1,36 @@
 import socket
-import time
+import os
 
+HOST = ''
 PORT = 3333
 
+class Server(object):
+
+    def __init__(self):
+        # Create a UDP socket
+        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        # Accepts connections from outside sources on this PORT
+        self.serversocket.bind((HOST, PORT))
+
+        # Listen to up to 5 requests at a time.
+        self.serversocket.listen(5)
+
+        self.clients = {}
+
+    def update(self):
+
+        data, addr = self.serversocket.recvfrom(1024)
+
+        reply = "We hear you loud and clear, alpha"
+
+        s.sendto(reply, addr)
+        print('Message from {}:{} - {}'.format(addr[0], addr[1], data.strip()))
+
 def start():
-    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    host = socket.gethostname()
-    serversocket.bind(('0.0.0.0', PORT))
-
-    serversocket.listen(5)
-
+    game_server = Server()
     while True:
-        clientsocket, addr = serversocket.accept()
-
-        print("Got a connection from {}".format(str(addr)))
-        currentTime = time.ctime(time.time()) + "\r\n"
-        clientsocket.send(currentTime.encode('ascii'))
-        clientsocket.close()
+        game_server.update()
 
 if __name__ == "__main__":
     start()
