@@ -22,7 +22,7 @@ class Server(object):
 
         data, addr = self.serversocket.recvfrom(1024)
 
-        reply = "We hear you loud and clear, alpha"
+        reply = "We hear you loud and clear, alpha".encode()
 
         self.serversocket.sendto(reply, addr)
         print('Message from {}:{} - {}'.format(addr[0], addr[1], data.strip()))
