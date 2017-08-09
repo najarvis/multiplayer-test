@@ -3,8 +3,9 @@ import client
 import base64
 import pickle
 import player
+import sys
 
-def run():
+def run(host=None):
     pygame.init()
 
     screen_size = (640, 480)
@@ -12,7 +13,10 @@ def run():
 
     clock = pygame.time.Clock()
 
-    player_client = client.Client()
+    if host is None:
+        player_client = client.Client()
+    else:
+        player_client = client.Client(host)
 
     # Create a player instance and change it's color to red to differenciate
     main_player = player.Player()
@@ -63,4 +67,7 @@ def run():
     pygame.quit()
 
 if __name__ == "__main__":
-    run()
+    if len(sys.argv) > 1:
+        run(sys.argv[1])
+    else:
+        run()

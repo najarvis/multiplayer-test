@@ -8,13 +8,13 @@ PORT = 3333
 
 class Client(object):
 
-    def __init__(self):
+    def __init__(self, host=HOST):
         self.clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+        self.host = host
         #self.clientsocket.connect((host, port))
 
     def send_message(self, msg):
-        self.clientsocket.sendto(msg, (HOST, PORT))
+        self.clientsocket.sendto(msg, (self.host, PORT))
 
         reply, addr = self.clientsocket.recvfrom(1024)
 
