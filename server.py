@@ -32,15 +32,20 @@ class Server(object):
         if addr not in self.clients:
             self.clients[addr] = [0, 0]
 
-        if formatted[0]: self.clients[addr][1] -= 1 # w
-        if formatted[2]: self.clients[addr][1] += 1 # s
-        if formatted[1]: self.clients[addr][0] -= 1 # a
-        if formatted[3]: self.clients[addr][0] += 1 # d
-        # [w, a, s, d]
+        try:
+            # [w, a, s, d]
+            if formatted[0]: self.clients[addr][1] -= 1 # w
+            if formatted[2]: self.clients[addr][1] += 1 # s
+            if formatted[1]: self.clients[addr][0] -= 1 # a
+            if formatted[3]: self.clients[addr][0] += 1 # d
 
-        reply = base64.b64encode(pickle.dumps(self.clients[addr]))
+            reply = base64.b64encode(pickle.dumps(self.clients[addr]))
 
-        self.serversocket.sendto(reply, addr)
+            self.serversocket.sendto(reply, addr)
+
+        except IndexError:
+            print("Bad data format!")
+            self.serversocket.sendto(base64.b64encode(pickle.dumps("Bad data format!")), addr)
 
 def start():
     game_server = Server()
