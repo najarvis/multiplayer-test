@@ -10,7 +10,7 @@ class Player(object):
         self.img.fill(self.color)
 
     def update(self, position):
-        self.pos = pos
+        self.pos = position
 
     def render(self, surface):
         surface.blit(self.img, self.pos)

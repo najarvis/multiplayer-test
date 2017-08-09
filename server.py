@@ -34,12 +34,13 @@ class Server(object):
 
         try:
             # [w, a, s, d]
-            if formatted[0]: self.clients[addr][1] -= 1 # w
-            if formatted[2]: self.clients[addr][1] += 1 # s
-            if formatted[1]: self.clients[addr][0] -= 1 # a
-            if formatted[3]: self.clients[addr][0] += 1 # d
+            if formatted[0]: self.clients[addr][1] -= 5 # w
+            if formatted[2]: self.clients[addr][1] += 5 # s
+            if formatted[1]: self.clients[addr][0] -= 5 # a
+            if formatted[3]: self.clients[addr][0] += 5 # d
 
-            reply = base64.b64encode(pickle.dumps(self.clients[addr]))
+            reply = [self.clients[addr], [pos for pos in self.clients.values() if pos != self.clients[addr]]]
+            enc_reply = base64.b64encode(pickle.dumps(self.clients[addr]))
 
             self.serversocket.sendto(reply, addr)
 

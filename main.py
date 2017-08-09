@@ -15,6 +15,7 @@ def run():
 
     player_client = client.Client()
     main_player = player.Player((20, 20))
+    main_player.color = (255, 0, 0)
 
     while not done:
         delta = clock.tick(1000/30)
@@ -27,9 +28,9 @@ def run():
             keys[pygame.K_d]]
 
         b64_msg = base64.b64encode(pickle.dumps(filtered))
-        position = player_client.send_message(b64_msg)
-        
-        main_player.update(position)
+        players = player_client.send_message(b64_msg)
+
+        main_player.update(players[0])
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -39,8 +40,12 @@ def run():
                 if event.key == pygame.K_ESCAPE:
                     done = True
 
-        surface.fill((0, 0, 0))
-        main_player.render(surface)
+        screen.fill((0, 0, 0))
+
+        for other_player in players[1]:
+            player.Player(other_player).render(screen)
+
+        main_player.render(screen)
 
         pygame.display.update()
 
