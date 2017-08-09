@@ -1,5 +1,6 @@
 import socket
 import sys
+import pickle
 
 HOST = '104.236.8.97'
 PORT = 3333
@@ -20,8 +21,8 @@ class Client(object):
 
 def run():
     client = Client()
-    for i in range(10):
-        client.send_message(str(i).encode())
+    b64_msg = pickle.dumps([1, 2, 3])
+    client.send_message(b64_msg)
 
 if __name__ == "__main__":
     run()
