@@ -20,6 +20,7 @@ class Client(object):
 
         return pickle.loads(base64.b64decode(reply))
 
+"""
 def run():
     client = Client()
     b64_msg = base64.b64encode(pickle.dumps([1, 2, 3, 4]))
@@ -27,3 +28,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+"""

@@ -4,6 +4,7 @@ import base64
 import pickle
 import player
 import sys
+import ui
 
 def run(host=None):
     pygame.init()
@@ -20,7 +21,9 @@ def run(host=None):
 
     # Create a player instance and change it's color to red to differenciate
     main_player = player.Player()
-    main_player.img.fill((255, 0, 0))
+    # main_player.color = (255, 0, 0)
+
+    game_ui = ui.UI(main_player)
 
     done = False
     while not done:
@@ -33,7 +36,8 @@ def run(host=None):
             keys[pygame.K_w],
             keys[pygame.K_a],
             keys[pygame.K_s],
-            keys[pygame.K_d]]
+            keys[pygame.K_d],
+            keys[pygame.K_SPACE]]
 
         # Encode that array and send it off
         b64_msg = base64.b64encode(pickle.dumps(filtered))
@@ -61,6 +65,8 @@ def run(host=None):
 
         # Draw the main player
         main_player.render(screen)
+
+        game_ui.render(screen)
 
         pygame.display.update()
 

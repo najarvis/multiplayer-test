@@ -16,6 +16,7 @@ class Server(object):
 
         # Accepts connections from outside sources on this PORT
         self.serversocket.bind((HOST, PORT))
+        print("Server started on {}:{}".format(HOST, PORT))
 
         # Store the positions of all players
         self.clients = {}
@@ -50,17 +51,15 @@ class Server(object):
 
         # If we don't know about the player, list them.
         if addr not in self.clients:
-            self.clients[addr] = client_data.ClientData(addr, (0, 0), 100)
+            self.clients[addr] = client_data.ClientData(addr)
             # self.clients[addr] = [0, 0, 0] # x_pos, y_pos, time_since_last_msg
 
         # Reset the how long it has been since we've seen them.
         self.clients[addr].CLIENT_AGE = 0
         try:
             # [w, a, s, d]
-            if formatted[0]: self.clients[addr].pos.y -= 5 # w
-            if formatted[2]: self.clients[addr].pos.y += 5 # s
-            if formatted[1]: self.clients[addr].pos.x -= 5 # a
-            if formatted[3]: self.clients[addr].pos.x += 5 # d
+            self.clients[addr].update(formatted)
+            # if formatted[3]: FIRE
 
             # So we respond to the player with an array in the form:
             # [their pos, [all other players positions]]
