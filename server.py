@@ -64,7 +64,7 @@ class Server(object):
             # So we respond to the player with an array in the form:
             # [their pos, [all other players positions]]
             reply = [
-              (self.clients[addr][0], self.clients[addr][1])
+              (self.clients[addr][0], self.clients[addr][1]),
               [(pos[0], pos[1]) for pos in self.clients.values() if pos != self.clients[addr]]]
 
             # encode the reply and send it off
