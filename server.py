@@ -26,6 +26,8 @@ class Server(object):
         data, addr = self.serversocket.recvfrom(1024)
         formatted = pickle.loads(base64.b64decode(data.strip()))
 
+        print('Message from {}:{} - {}'.format(addr[0], addr[1], formatted))
+
         # If we don't know about the player, list them.
         if addr not in self.clients:
             self.clients[addr] = [0, 0]
@@ -39,7 +41,6 @@ class Server(object):
         reply = base64.b64encode(pickle.dumps(self.clients[addr]))
 
         self.serversocket.sendto(reply, addr)
-        print('Message from {}:{} - {}'.format(addr[0], addr[1], formatted))
 
 def start():
     game_server = Server()
