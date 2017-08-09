@@ -2,7 +2,7 @@ import pygame
 
 class Player(object):
 
-    def __init__(self, pos):
+    def __init__(self, pos=(0,0)):
         self.pos = pos
         self.size = 64
         self.color = (255, 255, 255)

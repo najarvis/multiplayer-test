@@ -22,8 +22,8 @@ class Client(object):
 
 def run():
     client = Client()
-    b64_msg = base64.b64encode(pickle.dumps([1, 2, 3]))
-    client.send_message(b64_msg)
+    b64_msg = base64.b64encode(pickle.dumps([1, 2, 3, 4]))
+    print(client.send_message(b64_msg))
 
 if __name__ == "__main__":
     run()
