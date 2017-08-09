@@ -18,7 +18,7 @@ class Client(object):
 
         reply, addr = self.clientsocket.recvfrom(1024)
 
-        print("Server reply: {}".format(reply))
+        return pickle.loads(base64.b64decode(reply))
 
 def run():
     client = Client()

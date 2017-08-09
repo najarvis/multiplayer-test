@@ -18,6 +18,7 @@ class Server(object):
         # Listen to up to 5 requests at a time.
         #self.serversocket.listen(5)
 
+        # Store the positions of all players
         self.clients = {}
 
     def update(self):
@@ -25,7 +26,17 @@ class Server(object):
         data, addr = self.serversocket.recvfrom(1024)
         formatted = pickle.loads(base64.b64decode(data.strip()))
 
-        reply = "We hear you loud and clear, alpha".encode()
+        # If we don't know about the player, list them.
+        if addr not in self.clients:
+            self.clients[addr] = [0, 0]
+
+        if formatted[0]: self.clients[addr][1] -= 1 # w
+        if formatted[2]: self.clients[addr][1] += 1 # s
+        if formatted[1]: self.clients[addr][0] -= 1 # a
+        if formatted[3]: self.clients[addr][0] += 1 # d
+        # [w, a, s, d]
+
+        reply = base64.b64encode(pickle.dumps(self.clients[addr]))
 
         self.serversocket.sendto(reply, addr)
         print('Message from {}:{} - {}'.format(addr[0], addr[1], formatted))
