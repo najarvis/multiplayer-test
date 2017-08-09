@@ -23,7 +23,7 @@ class Server(object):
     def update(self):
 
         data, addr = self.serversocket.recvfrom(1024)
-        formatted = pickle.loads(base64.base64decode(data.strip()))
+        formatted = pickle.loads(base64.b64decode(data.strip()))
 
         reply = "We hear you loud and clear, alpha".encode()
 
