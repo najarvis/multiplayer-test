@@ -15,10 +15,16 @@ class Client(object):
 
     def send_message(self, msg):
         self.clientsocket.sendto(msg, (self.host, PORT))
+        self.clientsocket.settimeout(1)
 
-        reply, addr = self.clientsocket.recvfrom(1024)
+        try:
+            reply, addr = self.clientsocket.recvfrom(1024)
 
-        return pickle.loads(base64.b64decode(reply))
+            return pickle.loads(base64.b64decode(reply))
+
+        except socket.timeout:
+            print("Lost a packet! Using the last recieved data.")
+            return None
 
 """
 def run():

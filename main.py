@@ -25,6 +25,8 @@ def run(host=None):
 
     game_ui = ui.UI(main_player)
 
+    last = None
+
     done = False
     while not done:
         delta = clock.tick(1000/30) # Update 30x per second (approximately 30fps)
@@ -45,9 +47,15 @@ def run(host=None):
         # Get the data back from the server that looks like:
         # [my pos, [all other players positions]]
         players = player_client.send_message(b64_msg)
+        if players is None and last is not None:
+            players = last
 
-        # Update the player's position based on what the server said
-        main_player.update(players[0])
+        if last is None and players is not None:
+            last = players
+
+        if players is not None:
+            # Update the player's position based on what the server said
+            main_player.update(players[0])
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -60,8 +68,9 @@ def run(host=None):
         screen.fill((0, 0, 0))
 
         # Create a player instance and draw it for all other players
-        for other_player in players[1]:
-            player.Player.create_other(other_player).render(screen)
+        if players is not None:
+            for other_player in players[1]:
+                player.Player.create_other(other_player).render(screen)
 
         # Draw the main player
         main_player.render(screen)

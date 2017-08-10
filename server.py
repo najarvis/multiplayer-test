@@ -22,23 +22,10 @@ class Server(object):
         self.clients = {}
 
         self.curr_time = time.time()
+        self.time_since_last_update = 0
+        self.update_length = 1/30 # Update 30x per second
 
-    def update(self):
-
-        # Find how long it has been since the last update
-        # TODO: Make this it's own function
-        old_time = self.curr_time
-        self.curr_time = time.time()
-        delta = self.curr_time - old_time
-
-        for client in list(self.clients.keys()):
-            # increase how long it has been since we've seen each client
-            self.clients[client].CLIENT_AGE += delta;
-
-            # If it has been over 3 seconds, assume they left
-            if self.clients[client].CLIENT_AGE > 3:
-                del self.clients[client]
-
+    def handle_input(self):
         # Get data and decode it.
         data, addr = self.serversocket.recvfrom(1024)
 
@@ -56,28 +43,55 @@ class Server(object):
 
         # Reset the how long it has been since we've seen them.
         self.clients[addr].CLIENT_AGE = 0
-        try:
+        self.clients[addr].last_input = formatted
+
+    def update(self):
+
+        # Find how long it has been since the last update
+        # TODO: Make this it's own function
+        old_time = self.curr_time
+        self.curr_time = time.time()
+        delta = self.curr_time - old_time
+        self.time_since_last_update += delta
+
+        for client in list(self.clients.keys()):
+            # increase how long it has been since we've seen each client
+            self.clients[client].CLIENT_AGE += delta;
+
+            # If it has been over 3 seconds, assume they left
+            if self.clients[client].CLIENT_AGE > 3:
+                del self.clients[client]
+
+        if self.time_since_last_update < self.update_length:
+            return
+
+        self.time_since_last_update -= self.update_length
+
+
             # [w, a, s, d]
-            self.clients[addr].update(formatted)
-            # if formatted[3]: FIRE
+        for addr in self.clients.keys():
+            try:
+                self.clients[addr].update(self.clients[addr].last_input)
+                # if formatted[3]: FIRE
 
-            # So we respond to the player with an array in the form:
-            # [their pos, [all other players positions]]
-            reply = [
-              self.clients[addr].get_transmit_data(),
-              [c_data.get_transmit_data() for c_data in self.clients.values() if c_data.id != addr]]
+                # So we respond to the player with an array in the form:
+                # [their pos, [all other players positions]]
+                reply = [
+                  self.clients[addr].get_transmit_data(),
+                  [c_data.get_transmit_data() for c_data in self.clients.values() if c_data.id != addr]]
 
-            # encode the reply and send it off
-            enc_reply = base64.b64encode(pickle.dumps(reply))
-            self.serversocket.sendto(enc_reply, addr)
+                # encode the reply and send it off
+                enc_reply = base64.b64encode(pickle.dumps(reply))
+                self.serversocket.sendto(enc_reply, addr)
 
-        except IndexError:
-            print("Bad data format!")
-            self.serversocket.sendto(base64.b64encode(pickle.dumps("Bad data format!")), addr)
+            except IndexError:
+                print("Bad data format!")
+                self.serversocket.sendto(base64.b64encode(pickle.dumps("Bad data format!")), addr)
 
 def start():
     game_server = Server()
     while True:
+        game_server.handle_input()
         game_server.update()
 
 

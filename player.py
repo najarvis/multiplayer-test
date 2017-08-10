@@ -6,6 +6,10 @@ class Player(object):
 
     def __init__(self, pos=(0,0)):
         self.pos = vec2(*pos)
+        self.vel = vec2()
+        self.acceleration = 0.1
+        self.max_speed = 10
+
         self.orientation = 0
         self.size = 64
         # self.color = (255, 255, 255)
