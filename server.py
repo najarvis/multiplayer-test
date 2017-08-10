@@ -34,10 +34,9 @@ class Server(object):
 
         formatted = pickle.loads(base64.b64decode(data.strip()))
 
-        # print('Message from {}:{} - {}'.format(addr[0], addr[1], formatted))
-
         # If we don't know about the player, list them.
         if addr not in self.clients:
+            print("New client - {} Connected!".format(addr))
             self.clients[addr] = client_data.ClientData(addr)
             # self.clients[addr] = [0, 0, 0] # x_pos, y_pos, time_since_last_msg
 
@@ -67,8 +66,6 @@ class Server(object):
 
         self.time_since_last_update -= self.update_length
 
-
-            # [w, a, s, d]
         for addr in self.clients.keys():
             try:
                 self.clients[addr].update(self.clients[addr].last_input)

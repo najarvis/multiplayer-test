@@ -9,7 +9,7 @@ import ui
 def run(host=None):
     pygame.init()
 
-    screen_size = (640, 480)
+    screen_size = (1600, 900)
     screen = pygame.display.set_mode(screen_size)
 
     clock = pygame.time.Clock()
@@ -29,10 +29,10 @@ def run(host=None):
 
     done = False
     while not done:
-        delta = clock.tick(1000/30) # Update 30x per second (approximately 30fps)
+        delta = clock.tick() # Update 30x per second (approximately 30fps)
 
         # The only data sent to the server (currently) are the true / false
-        # values for whether the keys w, a, s, or d are pressed.
+        # values for whether the keys w, a, s, d, or space are pressed.
         keys = pygame.key.get_pressed()
         filtered = [
             keys[pygame.K_w],

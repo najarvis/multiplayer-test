@@ -11,11 +11,12 @@ class Player(object):
         self.max_speed = 10
 
         self.orientation = 0
-        self.size = 64
-        # self.color = (255, 255, 255)
+
         self.health = 100
         self.base_img = pygame.image.load("res/player_ships/PlayerShip1.png").convert_alpha()
-        # self.img.fill(self.color)
+
+        self.max_reload = 0.25
+        self.reload_timer = 0
 
     @classmethod
     def create_other(cls, data):
