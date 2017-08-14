@@ -5,6 +5,7 @@ import pickle
 import player
 import sys
 import ui
+import time
 
 def run(host=None):
     pygame.init()
@@ -46,6 +47,7 @@ def run(host=None):
 
         # Get the data back from the server that looks like:
         # [my pos, [all other players positions]]
+        curr_time = time.time()
         players = player_client.send_message(b64_msg)
         if players is None and last is not None:
             players = last
@@ -55,6 +57,8 @@ def run(host=None):
 
         if players is not None:
             # Update the player's position based on what the server said
+            delta = time.time() - curr_time
+            pygame.display.set_caption("Ping: {:.2f}".format((delta * 500)))
             main_player.update(players[0])
 
         for event in pygame.event.get():

@@ -11,7 +11,6 @@ class Client(object):
     def __init__(self, host=HOST):
         self.clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.host = host
-        #self.clientsocket.connect((host, port))
 
     def send_message(self, msg):
         self.clientsocket.sendto(msg, (self.host, PORT))
@@ -25,13 +24,3 @@ class Client(object):
         except socket.timeout:
             print("Lost a packet! Using the last recieved data.")
             return None
-
-"""
-def run():
-    client = Client()
-    b64_msg = base64.b64encode(pickle.dumps([1, 2, 3, 4]))
-    print(client.send_message(b64_msg))
-
-if __name__ == "__main__":
-    run()
-"""
