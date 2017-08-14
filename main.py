@@ -1,11 +1,7 @@
 import pygame
-import client
-import base64
-import pickle
-import player
-import sys
-import ui
-import time
+import sys, time
+import base64, pickle
+import client, player, ui, camera
 
 def run(host=None):
     pygame.init()
@@ -16,21 +12,25 @@ def run(host=None):
     clock = pygame.time.Clock()
 
     if host is None:
+        # We can specify a different host to connect to with sys args.
+        # for example: python main.py localhost
         player_client = client.Client()
     else:
         player_client = client.Client(host)
 
-    # Create a player instance and change it's color to red to differenciate
+    # The player that we will be sending input for.
     main_player = player.Player()
-    # main_player.color = (255, 0, 0)
+
+    # Set up the camera that keeps the player in the center of the screen.
+    main_camera = camera.Camera(main_player, screen_size)
 
     game_ui = ui.UI(main_player)
 
-    last = None
+    last_coord = None
 
     done = False
     while not done:
-        delta = clock.tick() # Update 30x per second (approximately 30fps)
+        delta = clock.tick(60) # Update approximately 60fps
 
         # The only data sent to the server (currently) are the true / false
         # values for whether the keys w, a, s, d, or space are pressed.
@@ -49,11 +49,11 @@ def run(host=None):
         # [my pos, [all other players positions]]
         curr_time = time.time()
         players = player_client.send_message(b64_msg)
-        if players is None and last is not None:
-            players = last
+        if players is None and last_coord is not None:
+            players = last_coord
 
-        if last is None and players is not None:
-            last = players
+        elif players is not None and last_coord is None:
+            last_coord = players
 
         if players is not None:
             # Update the player's position based on what the server said
@@ -74,10 +74,10 @@ def run(host=None):
         # Create a player instance and draw it for all other players
         if players is not None:
             for other_player in players[1]:
-                player.Player.create_other(other_player).render(screen)
+                player.Player.create_other(other_player).render(screen, main_camera)
 
         # Draw the main player
-        main_player.render(screen)
+        main_player.render(screen, main_camera)
 
         game_ui.render(screen)
 

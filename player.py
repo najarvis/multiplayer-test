@@ -32,10 +32,10 @@ class Player(object):
         self.orientation = data[2]
         self.health = max(0, data[3])
 
-    def render(self, surface):
+    def render(self, surface, camera):
         self.img = pygame.transform.rotate(self.base_img, math.degrees(self.orientation))
         self.rect = self.img.get_rect()
-        self.rect.center = self.pos
+        self.rect.center = camera.get_adjusted_coords(self.pos)
 
         surface.blit(self.img, self.rect)
 
