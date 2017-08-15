@@ -17,6 +17,8 @@ class ClientData(object):
         self.CLIENT_AGE = delta
 
         self.rotation_speed = 0.1
+        self.drag = 0.05
+
         self.speed = 5
 
         self.last_input = None
@@ -34,6 +36,8 @@ class ClientData(object):
 
         if form_input[2]: self.vel -= vec2(math.cos(self.orientation),
                                            -math.sin(self.orientation)) * (self.acceleration / 2)
+
+        self.vel = self.vel * (1-self.drag)
 
         if self.vel.get_magnitude() > self.max_speed:
             self.vel = self.vel.get_normalised() * self.max_speed

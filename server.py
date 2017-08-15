@@ -42,6 +42,8 @@ class InputThread(threading.Thread):
                     continue
 
             except Exception:
+                # TODO: Figure out what that error was. Some WinError about connection
+                # forcibly closed.
                 continue
 
             formatted = pickle.loads(base64.b64decode(data.strip()))
@@ -97,6 +99,7 @@ class UpdateThread(threading.Thread):
                             print("Bad data format!")
                             self.server.serversocket.sendto(base64.b64encode(pickle.dumps("Bad data format!")), addr)
 
+                # Runtime Error: Dictionary changed size during iteration
                 for addr in self.server.clients.keys():
                     # So we respond to the player with an array in the form:
                     # [their pos, [all other players positions]]
@@ -115,7 +118,7 @@ def start():
 
     input_thread.start()
     update_thread.start()
-    
+
     #while True:
         #game_server.handle_input()
         #game_server.update()

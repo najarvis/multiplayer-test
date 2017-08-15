@@ -13,6 +13,7 @@ class Client(object):
         self.host = host
 
     def send_message(self, msg):
+        # TODO: Make this a separate thread and interpolate until an update comes in.
         self.clientsocket.sendto(msg, (self.host, PORT))
         self.clientsocket.settimeout(1)
 
